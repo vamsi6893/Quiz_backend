@@ -27,8 +27,20 @@ router.post('/login', async (req, res) => {
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(400).json({ message: 'Invalid credentials' });
-    const token = jwt.sign({ username: user.username, email: user.email }, JWT_SECRET, { expiresIn: '1000' });
+    const token = jwt.sign({ username: user.username, email: user.email }, JWT_SECRET, { expiresIn: '1m' });
     res.json({ token });
+});
+
+router.post('/isAuthenticated', (req, res) => {
+    const token = req.headers['authorization']?.split(' ')[1] || req.body.token;
+    if (!token) return res.json({ authenticated: false });
+
+    try {
+        jwt.verify(token, JWT_SECRET);
+        res.json({ authenticated: true });
+    } catch (err) {
+        res.json({ authenticated: false });
+    }
 });
 
 router.post('/logout', (req, res) => {
