@@ -9,16 +9,11 @@ const leaderboardRoutes = require('./routes/leaderboard');
 const contestRoutes = require('./routes/contest');
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173', 'https://brain-battle-kappa.vercel.app'];
+// const allowedOrigins = ['http://localhost:5173', 'https://brain-battle-kappa.vercel.app'];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin:"*", // Use "*" to allow all origins, or specify allowedOrigins array
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], //
   credentials: true // Optional: if you're using cookies or HTTP auth
 }));
 app.use(bodyParser.json());
