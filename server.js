@@ -8,7 +8,19 @@ const profileRoutes = require('./routes/profile');
 const leaderboardRoutes = require('./routes/leaderboard');
 const contestRoutes = require('./routes/contest');
 const app = express();
-app.use(cors());
+
+const allowedOrigins = ['http://localhost:5173', 'https://brain-battle-kappa.vercel.app'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true // Optional: if you're using cookies or HTTP auth
+}));
 app.use(bodyParser.json());
 app.use('/api', require('./routes/score'))
 app.use('/api/contest', contestRoutes);
